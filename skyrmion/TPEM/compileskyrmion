@@ -1,0 +1,1 @@
+ifort -w skyrmionlattice.f90 func.o libtpem.a -o skyrmionlattice
