@@ -1,0 +1,1 @@
+icc -c -Wall -DNO_LAPACK -DNO_GSL func.c 

@@ -1,0 +1,49 @@
+/* This is a library of functions that implements the truncated
+ * polynomial expansion method (TPEM) described in the paper.
+ * The software library is designed to be called by other programs
+ * but a sample working program (tpem_test.c) is included.
+ */
+ 
+SAMPLE PROGRAM
+Compilation of the sample program (tpem_test.c):
+Requirements: A C compiler. 
+Optionally the LAPACK library, "make" utility and the GNU Scientific Library (GSL). 
+
+On Linux: Simply issue:
+make
+
+On other platforms: The "Makefile" provided for linux can be modified for use on other
+platforms. An example is provided for Mac OS X in the file "Makefile.osx", so
+in this case the command to compile the sample program is: 
+make -f Makefile.osx
+
+	        
+Run the program with:
+./tpem_test
+The program does not take any input and applies the TPEM to a random matrix. The output and
+further explanation is provided in the paper and in the file sample.output
+
+GENERAL USE
+To compile other programs that use the TPEM software library:
+Compile the test program to create the library (libtpem.a). Include the header:
+"tpem.h"
+in your source code that calls TPEM library functions. Compile your source code as you normally would
+ but adding the parameters 
+-L. -ltpem
+to the linker(see sample Makefile).
+
+
+ADDITIONAL NOTES:
+Using LAPACK: For the test program, LAPACK can be used to perform the matrix diagonalization. To enable this the
+	-DNO_LAPACK preprocessor define has to be removed and the LAPACK library added to the Makefile.
+Using the GSL: An alternative way of calculating TPEM coefficients can be done with the GSL library instead of the
+		default function. The use of the GSL is optional and usually not needed. 
+		To use the GSL remove the option -DNO_GSL from the Makefile and add -lgsl -lgslcblas. Make sure the
+		GSL library files can be found by the linker. Note: The GNU Scientific Library (GSL)
+		can be found at http://www.gnu.org/software/gsl/
+
+ 
+
+
+
+

@@ -1,0 +1,21 @@
+#!/bin/bash
+cd nonfermi1
+qsub run.pbs
+cd ../nonfermi2
+qsub run.pbs
+cd ../nonfermi3
+qsub run.pbs
+cd ../nonfermi4
+qsub run.pbs
+cd ../nonfermi5
+qsub run.pbs
+cd ../nonfermi6
+qsub run.pbs
+cd ../nonfermi7
+qsub run.pbs
+cd ../nonfermi8
+qsub run.pbs
+cd ../nonfermi9
+qsub run.pbs
+cd ../nonfermi10
+qsub run.pbs
