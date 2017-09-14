@@ -164,7 +164,7 @@ program skyrmionlattice
     !N = L*L, num of lattice
     !t, J_k, the parameter if H
     !##########################################
-    integer, parameter :: L = 100, N = L*L, num_MC = 10**6, num_T_para = 21
+    integer, parameter :: L = 40, N = L*L, num_MC = 5*10**5, num_T_para = 25
     real*8, parameter :: t = 1.0, PI = 3.141592654
     integer :: i, j, k, ii, p, d, di, dd, ij, aver_num
     real*8 :: ran, J_k, beta, miu, Tc, x, energy
@@ -172,7 +172,7 @@ program skyrmionlattice
     real*8, dimension(2,N) :: fai, theta
     real*8, dimension(num_T_para) :: T_para
     character(len=2) :: cha
-    open( unit = 12, file = 'para.in' )
+    !open( unit = 12, file = 'para.in' )
     !read(12,*) pa
     !pa = 55.0/89
     d = 1
@@ -184,7 +184,7 @@ program skyrmionlattice
     aver_num = 100
 
     T_para = (/1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2 ,0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01,&
-        0.006, 0.002/)
+        0.006, 0.002, 0.0009, 0.0005, 0.0003, 0.00009/)
     call initran(1)
     open( unit = 13, file = 'lattice.out' )
 
@@ -197,7 +197,7 @@ program skyrmionlattice
     !ij = 0
 do ii = 1, num_T_para 
     write(cha,'(i2)') ii
-    open(unit = ii+20, file = 'enenry'//adjustl(trim(cha))//'.out' ) 
+    open(unit = ii+20, file = 'energy'//adjustl(trim(cha))//'.out' ) 
     write(*,*) num_T_para-ii
     Tc = T_para(ii)*t
     beta = 1/Tc
