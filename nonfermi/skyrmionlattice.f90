@@ -26,43 +26,31 @@ contains
                     j_minus = j-1
                 end if 
                 N_ij = i*L+j+1
-                !N_i_minus = i_minus*L+j+1
                 N_i_plus = i_plus*L+j+1
-                !N_j_minus = i*L+j_minus+1
                 N_j_plus = i*L+j_plus+1
-                !N_i_minus_j_plus = i_minus*L+j_plus+1
                 N_i_plus_j_minus = i_plus*L+j_minus+1
 
                 V = V-J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_plus))*cos(fai(N_i_plus))
                 V = V-J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_j_plus))*cos(fai(N_j_plus))
-                V = V-J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_minus_j_plus))*cos(fai(N_i_minus_j_plus))
+                V = V-J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_plus_j_minus))*cos(fai(N_i_plus_j_minus))
 
                 V = V-J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_plus))*sin(fai(N_i_plus))
                 V = V-J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_j_plus))*sin(fai(N_j_plus))
-                V = V-J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_minus_j_plus))*sin(fai(N_i_minus_j_plus))
+                V = V-J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus))
 
                 V = V-J_H*cos(theta(N_ij))*cos(theta(N_i_plus))
                 V = V-J_H*cos(theta(N_ij))*cos(theta(N_j_plus))
-                V = V-J_H*cos(theta(N_ij))*cos(theta(N_i_minus_j_plus))
+                V = V-J_H*cos(theta(N_ij))*cos(theta(N_i_plus_j_minus))
 
-                V = V+1.0/2*lambda*(-1.0)*( sin(theta(N_i_minus))*sin(fai(N_i_minus))*cos(theta(N_ij))-cos(theta(N_i_minus))&
+                V = V+lambda*( sin(theta(N_i_plus))*sin(fai(N_i_plus))*cos(theta(N_ij))-cos(theta(N_i_plus))&
                     *sin(theta(N_ij))*sin(fai(N_ij)) )
-                V = V+1.0/2*lambda*( sin(theta(N_i_plus))*sin(fai(N_i_plus))*cos(theta(N_ij))-cos(theta(N_i_plus))&
-                    *sin(theta(N_ij))*sin(fai(N_ij)) )
-                V = V+1.0/2*lambda*(-1.0)*( (1.0/2)*( sin(theta(N_j_minus))*sin(fai(N_j_minus))*cos(theta(N_ij))&
-                    -cos(theta(N_j_minus))*sin(theta(N_ij))*sin(fai(N_ij)) ) + sqrt(3.0)/2*( cos(theta(N_j_minus))&
-                    *sin(theta(N_ij))*cos(fai(N_ij))-sin(theta(N_j_minus))*cos(fai(N_j_minus))*cos(theta(N_ij)) ) )
-                V = V+1.0/2*lambda*( (1.0/2)*( sin(theta(N_j_plus))*sin(fai(N_j_plus))*cos(theta(N_ij))&
+                V = V+lambda*( (1.0/2)*( sin(theta(N_j_plus))*sin(fai(N_j_plus))*cos(theta(N_ij))&
                     -cos(theta(N_j_plus))*sin(theta(N_ij))*sin(fai(N_ij)) ) &
                     + sqrt(3.0)/2*( cos(theta(N_j_plus))*sin(theta(N_ij))*cos(fai(N_ij))-sin(theta(N_j_plus))*cos(fai(N_j_plus))*cos(theta(N_ij)) ) )
-                V = V+1.0/2*lambda*( sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus))*cos(theta(N_ij))&
+                V = V+lambda*( sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus))*cos(theta(N_ij))&
                     -cos(theta(N_i_plus_j_minus))*sin(theta(N_ij))*sin(fai(N_ij)) ) &
-                    +1.0/2*lambda*(-1.0)*( (1.0/2)*( sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus))*cos(theta(N_ij))-cos(theta(N_i_plus_j_minus))*sin(theta(N_ij))*sin(fai(N_ij)) ) &
+                    +lambda*(-1.0)*( (1.0/2)*( sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus))*cos(theta(N_ij))-cos(theta(N_i_plus_j_minus))*sin(theta(N_ij))*sin(fai(N_ij)) ) &
                     + sqrt(3.0)/2*( cos(theta(N_i_plus_j_minus))*sin(theta(N_ij))*cos(fai(N_ij))-sin(theta(N_i_plus_j_minus))*cos(fai(N_i_plus_j_minus))*cos(theta(N_ij)) ) )
-                V = V+1.0/2*lambda*(-1.0)*( sin(theta(N_i_minus_j_plus))*sin(fai(N_i_minus_j_plus))*cos(theta(N_ij))&
-                    -cos(theta(N_i_minus_j_plus))*sin(theta(N_ij))*sin(fai(N_ij)) ) &
-                    +1.0/2*lambda*( (1.0/2)*( sin(theta(N_i_minus_j_plus))*sin(fai(N_i_minus_j_plus))*cos(theta(N_ij))-cos(theta(N_i_minus_j_plus))&
-                    *sin(theta(N_ij))*sin(fai(N_ij)) ) + sqrt(3.0)/2*( cos(theta(N_i_minus_j_plus))*sin(theta&
                     (N_ij))*cos(fai(N_ij))-sin(theta(N_i_minus_j_plus))*cos(fai(N_i_minus_j_plus))*cos(theta(N_ij)) ) )
 
             end do
@@ -190,7 +178,7 @@ do ii = 1, num_T_para
     write(cha,'(i2)') ii
     open(unit = ii+20, file = 'energy'//adjustl(trim(cha))//'.out' ) 
     write(*,*) num_T_para-ii
-    Tc = T_para(ii)*t
+    Tc = T_para(ii)*J_H
     beta = 1/Tc
     p = 0
     call calcu_V( L, N, J_H, lambda, fai(d,:), theta(d,:), V )
