@@ -26,33 +26,24 @@ contains
                     j_minus = j-1
                 end if 
                 N_ij = i*L+j+1
-                N_i_minus = i_minus*L+j+1
+                !N_i_minus = i_minus*L+j+1
                 N_i_plus = i_plus*L+j+1
-                N_j_minus = i*L+j_minus+1
+                !N_j_minus = i*L+j_minus+1
                 N_j_plus = i*L+j_plus+1
-                N_i_minus_j_plus = i_minus*L+j_plus+1
+                !N_i_minus_j_plus = i_minus*L+j_plus+1
                 N_i_plus_j_minus = i_plus*L+j_minus+1
 
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_minus))*cos(fai(N_i_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_plus))*cos(fai(N_i_plus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_j_minus))*cos(fai(N_j_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_j_plus))*cos(fai(N_j_plus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_plus_j_minus))*cos(fai(N_i_plus_j_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_minus_j_plus))*cos(fai(N_i_minus_j_plus))
+                V = V-J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_plus))*cos(fai(N_i_plus))
+                V = V-J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_j_plus))*cos(fai(N_j_plus))
+                V = V-J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_minus_j_plus))*cos(fai(N_i_minus_j_plus))
 
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_minus))*sin(fai(N_i_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_plus))*sin(fai(N_i_plus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_j_minus))*sin(fai(N_j_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_j_plus))*sin(fai(N_j_plus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_minus_j_plus))*sin(fai(N_i_minus_j_plus))
+                V = V-J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_plus))*sin(fai(N_i_plus))
+                V = V-J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_j_plus))*sin(fai(N_j_plus))
+                V = V-J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_minus_j_plus))*sin(fai(N_i_minus_j_plus))
 
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_i_minus))
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_i_plus))
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_j_minus))
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_j_plus))
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_i_plus_j_minus))
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_i_minus_j_plus))
+                V = V-J_H*cos(theta(N_ij))*cos(theta(N_i_plus))
+                V = V-J_H*cos(theta(N_ij))*cos(theta(N_j_plus))
+                V = V-J_H*cos(theta(N_ij))*cos(theta(N_i_minus_j_plus))
 
                 V = V+1.0/2*lambda*(-1.0)*( sin(theta(N_i_minus))*sin(fai(N_i_minus))*cos(theta(N_ij))-cos(theta(N_i_minus))&
                     *sin(theta(N_ij))*sin(fai(N_ij)) )
@@ -164,7 +155,7 @@ program skyrmionlattice
     !N = L*L, num of lattice
     !t, J_k, the parameter if H
     !##########################################
-    integer, parameter :: L = 40, N = L*L, num_MC = 5*10**5, num_T_para = 25
+    integer, parameter :: L = 40, N = L*L, num_MC = 5*10**5, num_T_para = 21
     real*8, parameter :: t = 1.0, PI = 3.141592654
     integer :: i, j, k, ii, p, d, di, dd, ij, aver_num
     real*8 :: ran, J_k, beta, miu, Tc, x, energy
@@ -176,15 +167,15 @@ program skyrmionlattice
     !read(12,*) pa
     !pa = 55.0/89
     d = 1
-    lambda = 0.3*PI
-    J_H = lambda/11.7810
+    lambda = 0.4*PI
+    J_H = lambda/11.6239
     !B_z = 0.001*t
     !deltaV = 0
     !V = 0
     aver_num = 100
 
     T_para = (/1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2 ,0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01,&
-        0.006, 0.002, 0.0009, 0.0005, 0.0003, 0.00009/)
+        0.006, 0.002/)
     call initran(1)
     open( unit = 13, file = 'lattice.out' )
 
