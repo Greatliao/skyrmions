@@ -48,8 +48,8 @@ contains
                     -cos(theta(N_ij))*sin(theta(N_j_plus))*sin(fai(N_j_plus)) ) &
                     + sqrt(3.0)/2*( sin(theta(N_ij))*cos(fai(N_ij))*cos(theta(N_j_plus))-cos(theta(N_ij))*sin(theta(N_j_plus))*cos(fai(N_j_plus)) ) )
                 V = V+lambda*( sin(theta(N_ij))*sin(fai(N_ij))*cos(theta(N_i_plus_j_minus))-cos(theta(N_ij))&
-                    *sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus)) )
-                    +lambda*(-1.0)( (1.0/2)*( sin(theta(N_ij))*sin(fai(N_ij))*cos(theta(N_i_plus_j_minus))&
+                    *sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus)) )&
+                    +lambda*(-1.0)*( (1.0/2)*( sin(theta(N_ij))*sin(fai(N_ij))*cos(theta(N_i_plus_j_minus))&
                     -cos(theta(N_ij))*sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus)) ) &
                     + sqrt(3.0)/2*( sin(theta(N_ij))*cos(fai(N_ij))*cos(theta(N_i_plus_j_minus))&
                     -cos(theta(N_ij))*sin(theta(N_i_plus_j_minus))*cos(fai(N_i_plus_j_minus)) ) )
