@@ -144,29 +144,27 @@ program skyrmionlattice
     !N = L*L, num of lattice
     !t, J_k, the parameter if H
     !##########################################
-    integer, parameter :: L = 40, N = L*L, num_MC = 5*10**5, num_T_para = 21
+    integer, parameter :: L = 40, N = L*L, num_MC = 5*10**5, num_T_para = 100
     real*8, parameter :: t = 1.0, PI = 3.141592654
     integer :: i, j, k, ii, p, d, di, dd, ij, aver_num
     real*8 :: ran, J_k, beta, miu, Tc, x, energy
     real*8 :: V, deltaV, J_H, lambda, B_z, pa, V_new, deltaV_new
     real*8, dimension(2,N) :: fai, theta
     real*8, dimension(num_T_para) :: T_para
-    character(len=2) :: cha
+    character(len=3) :: cha
     !open( unit = 12, file = 'para.in' )
     !read(12,*) pa
     !pa = 55.0/89
     d = 1
-    lambda = 0.4*PI
-    J_H = lambda/11.6239
+    lambda = 0.4*PI*t
+    J_H = t
     !B_z = 0.001*t
     !deltaV = 0
     !V = 0
     aver_num = 100
 
-    T_para = (/1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2 ,0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01,&
-        0.006, 0.002/)
+    T_para = (/ (0.01*i,i=num_T_para,1,-1) /)
     call initran(1)
-    open( unit = 13, file = 'lattice.out' )
 
     do i = 1, N
         x = ran()
@@ -176,8 +174,9 @@ program skyrmionlattice
     end do
     !ij = 0
 do ii = 1, num_T_para 
-    write(cha,'(i2)') ii
+    write(cha,*) ii
     open(unit = ii+20, file = 'energy'//adjustl(trim(cha))//'.out' ) 
+    open( unit = ii+120, file = 'lattice'//adjustl(trim(cha))//'.out' )
     write(*,*) num_T_para-ii
     Tc = T_para(ii)*J_H
     beta = 1/Tc
@@ -227,13 +226,14 @@ do ii = 1, num_T_para
         end if
         d = dd
         !write(*,*) i/(num_MC/100)
-        if (ii == num_T_para .AND. i > num_MC-aver_num*N ) then
+        !if (ii == num_T_para .AND. i > num_MC-aver_num*N ) then
+        if ( i > num_MC-aver_num*N ) then
             if ( mod(i+aver_num*N-num_MC, N) == 0 ) then
                 !energy = energy+V
                 !ij = ij+1
                 !write(13,*) ij
                 do j = 1, N
-                    write(13,*) j, theta(d,j), fai(d,j)
+                    write(ii+120,*) theta(d,j), fai(d,j)
                 end do
             end if
         end if
@@ -244,6 +244,7 @@ do ii = 1, num_T_para
 
     end do
     close(ii+20)
+    close(ii+120)
 end do
 !energy = energy/aver_num
 !open(18,file = 'energy.out')
