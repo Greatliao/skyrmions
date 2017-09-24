@@ -221,10 +221,27 @@ do ii = 1, num_T_para
             p = mloc(1)
             call calcu_p_nearest( p, p_i_pl, p_i_mi, p_j_pl, p_j_mi, p_i_pl_j_mi, p_i_mi_j_pl, L )
             do j = 1, N/10
+                dd = di(d)
                 x = ran()
                 temp_p = int(x*N)+1
                 fai(dd,:) = fai(d,:)
                 theta(dd,:) = theta(d,:)
+
+                theta(dd,temp_p) = theta(d,p)
+                theta(dd,temp_p_i_pl) = theta(d,p_i_pl)
+                theta(dd,temp_p_i_mi) = theta(d,p_i_mi)
+                theta(dd,temp_p_j_pl) = theta(d,p_j_pl)
+                theta(dd,temp_p_j_mi) = theta(d,p_j_mi)
+                theta(dd,temp_p_i_pl_j_mi) = theta(d,p_i_pl_j_mi)
+                theta(dd,temp_p_i_mi_j_pl) = theta(d,p_i_mi_j_pl)
+
+                fai(dd,temp_p) = fai(d,p)
+                fai(dd,temp_p_i_pl) = fai(d,p_i_pl)
+                fai(dd,temp_p_i_mi) = fai(d,p_i_mi)
+                fai(dd,temp_p_j_pl) = fai(d,p_j_pl)
+                fai(dd,temp_p_j_mi) = fai(d,p_j_mi)
+                fai(dd,temp_p_i_pl_j_mi) = fai(d,p_i_pl_j_mi)
+                fai(dd,temp_p_i_mi_j_pl) = fai(d,p_i_mi_j_pl)
 
                 call calcu_V( L, J_H, lambda, fai(dd,:), theta(dd,:), H, V_new )
 
@@ -249,7 +266,7 @@ do ii = 1, num_T_para
                     V = V_new
                 end if
                 d = dd
-                write(13,*) V
+                !write(13,*) V
             end do
         end if
 
