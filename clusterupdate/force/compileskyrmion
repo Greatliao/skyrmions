@@ -1,0 +1,1 @@
+ifort -w skyrmionlattice_force.f90 -o skyrmionlattice
