@@ -224,6 +224,8 @@ do ii = 1, num_T_para
                 dd = di(d)
                 x = ran()
                 temp_p = int(x*N)+1
+                call calcu_p_nearest( temp_p, temp_p_i_pl, temp_p_i_mi, temp_p_j_pl, temp_p_j_mi, temp_p_i_pl_j_mi,&
+                    temp_p_i_mi_j_pl, L )
                 fai(dd,:) = fai(d,:)
                 theta(dd,:) = theta(d,:)
 
