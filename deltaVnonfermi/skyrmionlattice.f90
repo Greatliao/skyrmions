@@ -47,21 +47,21 @@ contains
         Hp = Hp-J_H*( sin(theta(p))*sin(theta(p_i_pl_j_mi))*cos(fai(p)-fai(p_i_pl_j_mi))+cos(theta(p))*cos(theta(p_i_pl_j_mi)) )
         Hp = Hp-J_H*( sin(theta(p))*sin(theta(p_i_mi_j_pl))*cos(fai(p)-fai(p_i_mi_j_pl))+cos(theta(p))*cos(theta(p_i_mi_j_pl)) )
 
-        Hp = Hp+lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_pl))-cos(theta(p))*sin(theta(p_i_pl))*sin(fai(p_i_pl)) )
-        Hp = Hp-lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_mi))-cos(theta(p))*sin(theta(p_i_mi))*sin(fai(p_i_mi)) )
-        Hp = Hp+(sqrt(3.0)/2)*lambda*( cos(theta(p))*sin(theta(p_j_pl))*cos(fai(p_j_pl))&
+        Hp = Hp-lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_pl))-cos(theta(p))*sin(theta(p_i_pl))*sin(fai(p_i_pl)) )
+        Hp = Hp+lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_mi))-cos(theta(p))*sin(theta(p_i_mi))*sin(fai(p_i_mi)) )
+        Hp = Hp-(sqrt(3.0)/2)*lambda*( cos(theta(p))*sin(theta(p_j_pl))*cos(fai(p_j_pl))&
             -sin(theta(p))*cos(fai(p))*cos(theta(p_j_pl)) )&
-            +(1.0/2)*lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_j_pl))-cos(theta(p))*sin(theta(p_j_pl))*sin(fai(p_j_pl)) )
-        Hp = Hp-(sqrt(3.0)/2)*lambda*( cos(theta(p))*sin(theta(p_j_mi))*cos(fai(p_j_mi))&
+            -(1.0/2)*lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_j_pl))-cos(theta(p))*sin(theta(p_j_pl))*sin(fai(p_j_pl)) )
+        Hp = Hp+(sqrt(3.0)/2)*lambda*( cos(theta(p))*sin(theta(p_j_mi))*cos(fai(p_j_mi))&
             -sin(theta(p))*cos(fai(p))*cos(theta(p_j_mi)) )&
-            -(1.0/2)*lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_j_mi))-cos(theta(p))*sin(theta(p_j_mi))*sin(fai(p_j_mi)) )
-        Hp = Hp+lambda*(1.0/2)*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_pl_j_mi))&
+            +(1.0/2)*lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_j_mi))-cos(theta(p))*sin(theta(p_j_mi))*sin(fai(p_j_mi)) )
+        Hp = Hp-lambda*(1.0/2)*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_pl_j_mi))&
             -cos(theta(p))*sin(theta(p_i_pl_j_mi))*sin(fai(p_i_pl_j_mi)) )&
-            -lambda*(sqrt(3.0)/2)*( cos(theta(p))*sin(theta(p_i_pl_j_mi))*cos(fai(p_i_pl_j_mi))&
+            +lambda*(sqrt(3.0)/2)*( cos(theta(p))*sin(theta(p_i_pl_j_mi))*cos(fai(p_i_pl_j_mi))&
             -sin(theta(p))*cos(fai(p))*cos(theta(p_i_pl_j_mi)) )
-        Hp = Hp-lambda*(1.0/2)*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_mi_j_pl))&
+        Hp = Hp+lambda*(1.0/2)*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_mi_j_pl))&
             -cos(theta(p))*sin(theta(p_i_mi_j_pl))*sin(fai(p_i_mi_j_pl)) )&
-            +lambda*(sqrt(3.0)/2)*( cos(theta(p))*sin(theta(p_i_mi_j_pl))*cos(fai(p_i_mi_j_pl))&
+            -lambda*(sqrt(3.0)/2)*( cos(theta(p))*sin(theta(p_i_mi_j_pl))*cos(fai(p_i_mi_j_pl))&
             -sin(theta(p))*cos(fai(p))*cos(theta(p_i_mi_j_pl)) )
         !write(*,*) Hp
 
@@ -172,6 +172,7 @@ program skyrmionlattice
     integer, parameter :: L = 40, N = L*L, num_MC = 4*10**5, num_T_para = 20
     real*8, parameter :: t = 1.0, PI = 3.141592654
     integer :: i, j, k, ii, r, d, di, dd, ij, aver_num
+    integer :: p, p_i_pl, p_i_mi, p_j_pl, p_j_mi, p_i_pl_j_mi, p_i_mi_j_pl
     real*8 :: ran, beta, Tc, x, Hp, B_z
     real*8 :: V, deltaV, J_H, lambda, pa, V_new
     integer, dimension(1) :: mloc
@@ -250,6 +251,13 @@ do ii = 1, num_T_para
         else
             V = V+Hp-H(r)
             H(r) = Hp
+            call calcu_p_nearest( r, p_i_pl, p_i_mi, p_j_pl, p_j_mi, p_i_pl_j_mi, p_i_mi_j_pl, L )
+            call calcu_Hp( p_i_pl, L, J_H, lambda, fai(dd,:), theta(dd,:), H(p_i_pl))
+            call calcu_Hp( p_i_mi, L, J_H, lambda, fai(dd,:), theta(dd,:), H(p_i_mi))
+            call calcu_Hp( p_j_pl, L, J_H, lambda, fai(dd,:), theta(dd,:), H(p_j_pl))
+            call calcu_Hp( p_j_mi, L, J_H, lambda, fai(dd,:), theta(dd,:), H(p_j_mi))
+            call calcu_Hp( p_i_pl_j_mi, L, J_H, lambda, fai(dd,:), theta(dd,:), H(p_i_pl_j_mi))
+            call calcu_Hp( p_i_mi_j_pl, L, J_H, lambda, fai(dd,:), theta(dd,:), H(p_i_mi_j_pl))
         end if
         d = dd
         !if (ii == num_T_para .AND. i > num_MC-aver_num*N ) then
