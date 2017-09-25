@@ -7,5 +7,5 @@ do
     cp skyrmionlattice $filename$i
     cp run.pbs $filename$i
     cp seed.in $filename$i
-    echo "0.00"$i > ./$filename$i/B_z.in
+    echo "0."$i > ./$filename$i/B_z.in
 done
