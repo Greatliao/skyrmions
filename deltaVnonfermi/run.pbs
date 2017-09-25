@@ -4,7 +4,7 @@
 #PBS -e job.err
 #PBS -o job.out
 #PBS -l walltime=240:00:00
-#PBS -q queue_smallmem
+#PBS -q queue_bigmem
 out=date.out
 cd $PBS_O_WORKDIR
 
