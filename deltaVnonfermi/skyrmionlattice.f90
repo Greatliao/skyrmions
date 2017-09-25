@@ -2,81 +2,86 @@
 !
 !###############################################################
 
-module dou_ex
+module modu
 contains
-
-    subroutine calcu_V( L, N, J_H, lambda, fai, theta, V )
+    subroutine calcu_p_nearest( p, p_i_pl, p_i_mi, p_j_pl, p_j_mi, p_i_pl_j_mi, p_i_mi_j_pl, L )
         implicit none
-        integer :: L, N, i, j, i_minus, i_plus, j_minus, j_plus, N_i_minus, N_i_plus, N_j_minus, N_j_plus, N_ij, N_i_plus_j_minus, N_i_minus_j_plus
-        real*8 :: J_H, lambda, fai(N), theta(N), V
-        V = 0
-        do i = 0, L-1, 1
-            do j = 0, L-1, 1
-                !period of boundary 
-                i_plus = mod(i+1, L)
-                j_plus = mod(j+1, L)
-                if (i==0) then
-                    i_minus = L-1
-                else
-                    i_minus = i-1
-                end if 
-                if (j==0) then
-                    j_minus = L-1
-                else
-                    j_minus = j-1
-                end if 
-                N_ij = i*L+j+1
-                N_i_minus = i_minus*L+j+1
-                N_i_plus = i_plus*L+j+1
-                N_j_minus = i*L+j_minus+1
-                N_j_plus = i*L+j_plus+1
-                N_i_minus_j_plus = i_minus*L+j_plus+1
-                N_i_plus_j_minus = i_plus*L+j_minus+1
+        integer :: p, p_i_pl, p_i_mi, p_j_pl, p_j_mi, p_i_pl_j_mi, p_i_mi_j_pl, L
+        integer :: i, j, i_pl, j_pl, i_mi, j_mi
 
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_minus))*cos(fai(N_i_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_plus))*cos(fai(N_i_plus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_j_minus))*cos(fai(N_j_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_j_plus))*cos(fai(N_j_plus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_plus_j_minus))*cos(fai(N_i_plus_j_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*cos(fai(N_ij))*sin(theta(N_i_minus_j_plus))*cos(fai(N_i_minus_j_plus))
+        i = int((p-1)/L)
+        j = mod(p-1,L)
+        i_pl = mod(i+1,L)
+        j_pl = mod(j+1,L)
+        if (i==0) then
+            i_mi = L-1
+        else
+            i_mi = i-1
+        end if
+        if (j==0) then
+            j_mi = L-1
+        else
+            j_mi = j-1
+        end if
 
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_minus))*sin(fai(N_i_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_plus))*sin(fai(N_i_plus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_j_minus))*sin(fai(N_j_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_j_plus))*sin(fai(N_j_plus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus))
-                V = V-1.0/2*J_H*sin(theta(N_ij))*sin(fai(N_ij))*sin(theta(N_i_minus_j_plus))*sin(fai(N_i_minus_j_plus))
+        p_i_pl = i_pl*L+j+1
+        p_i_mi = i_mi*L+j+1
+        p_j_pl = i*L+j_pl+1
+        p_j_mi = i*L+j_mi+1
+        p_i_pl_j_mi = i_pl*L+j_mi+1
+        p_i_mi_j_pl = i_mi*L+j_pl+1
 
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_i_minus))
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_i_plus))
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_j_minus))
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_j_plus))
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_i_plus_j_minus))
-                V = V-1.0/2*J_H*cos(theta(N_ij))*cos(theta(N_i_minus_j_plus))
+    end subroutine calcu_p_nearest 
 
-                V = V+1.0/2*lambda*(-1.0)*( sin(theta(N_i_minus))*sin(fai(N_i_minus))*cos(theta(N_ij))-cos(theta(N_i_minus))&
-                    *sin(theta(N_ij))*sin(fai(N_ij)) )
-                V = V+1.0/2*lambda*( sin(theta(N_i_plus))*sin(fai(N_i_plus))*cos(theta(N_ij))-cos(theta(N_i_plus))&
-                    *sin(theta(N_ij))*sin(fai(N_ij)) )
-                V = V+1.0/2*lambda*(-1.0)*( (1.0/2)*( sin(theta(N_j_minus))*sin(fai(N_j_minus))*cos(theta(N_ij))&
-                    -cos(theta(N_j_minus))*sin(theta(N_ij))*sin(fai(N_ij)) ) + sqrt(3.0)/2*( cos(theta(N_j_minus))&
-                    *sin(theta(N_ij))*cos(fai(N_ij))-sin(theta(N_j_minus))*cos(fai(N_j_minus))*cos(theta(N_ij)) ) )
-                V = V+1.0/2*lambda*( (1.0/2)*( sin(theta(N_j_plus))*sin(fai(N_j_plus))*cos(theta(N_ij))&
-                    -cos(theta(N_j_plus))*sin(theta(N_ij))*sin(fai(N_ij)) ) &
-                    + sqrt(3.0)/2*( cos(theta(N_j_plus))*sin(theta(N_ij))*cos(fai(N_ij))-sin(theta(N_j_plus))*cos(fai(N_j_plus))*cos(theta(N_ij)) ) )
-                V = V+1.0/2*lambda*( sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus))*cos(theta(N_ij))&
-                    -cos(theta(N_i_plus_j_minus))*sin(theta(N_ij))*sin(fai(N_ij)) ) &
-                    +1.0/2*lambda*(-1.0)*( (1.0/2)*( sin(theta(N_i_plus_j_minus))*sin(fai(N_i_plus_j_minus))*cos(theta(N_ij))-cos(theta(N_i_plus_j_minus))*sin(theta(N_ij))*sin(fai(N_ij)) ) &
-                    + sqrt(3.0)/2*( cos(theta(N_i_plus_j_minus))*sin(theta(N_ij))*cos(fai(N_ij))-sin(theta(N_i_plus_j_minus))*cos(fai(N_i_plus_j_minus))*cos(theta(N_ij)) ) )
-                V = V+1.0/2*lambda*(-1.0)*( sin(theta(N_i_minus_j_plus))*sin(fai(N_i_minus_j_plus))*cos(theta(N_ij))&
-                    -cos(theta(N_i_minus_j_plus))*sin(theta(N_ij))*sin(fai(N_ij)) ) &
-                    +1.0/2*lambda*( (1.0/2)*( sin(theta(N_i_minus_j_plus))*sin(fai(N_i_minus_j_plus))*cos(theta(N_ij))-cos(theta(N_i_minus_j_plus))&
-                    *sin(theta(N_ij))*sin(fai(N_ij)) ) + sqrt(3.0)/2*( cos(theta(N_i_minus_j_plus))*sin(theta&
-                    (N_ij))*cos(fai(N_ij))-sin(theta(N_i_minus_j_plus))*cos(fai(N_i_minus_j_plus))*cos(theta(N_ij)) ) )
+    subroutine calcu_Hp( p, L, J_H, lambda, fai, theta, Hp)
+        implicit none
+        integer :: p, p_i_pl, p_i_mi, p_j_pl, p_j_mi, p_i_pl_j_mi, p_i_mi_j_pl, L
+        real*8 :: J_H, lambda, fai(L*L), theta(L*L), Hp
+        Hp = 0.0
+        call calcu_p_nearest( p, p_i_pl, p_i_mi, p_j_pl, p_j_mi, p_i_pl_j_mi, p_i_mi_j_pl, L )
 
+        Hp = Hp-J_H*( sin(theta(p))*sin(theta(p_i_pl))*cos(fai(p)-fai(p_i_pl))+cos(theta(p))*cos(theta(p_i_pl)) )
+        Hp = Hp-J_H*( sin(theta(p))*sin(theta(p_i_mi))*cos(fai(p)-fai(p_i_mi))+cos(theta(p))*cos(theta(p_i_mi)) )
+        Hp = Hp-J_H*( sin(theta(p))*sin(theta(p_j_pl))*cos(fai(p)-fai(p_j_pl))+cos(theta(p))*cos(theta(p_j_pl)) )
+        Hp = Hp-J_H*( sin(theta(p))*sin(theta(p_j_mi))*cos(fai(p)-fai(p_j_mi))+cos(theta(p))*cos(theta(p_j_mi)) )
+        Hp = Hp-J_H*( sin(theta(p))*sin(theta(p_i_pl_j_mi))*cos(fai(p)-fai(p_i_pl_j_mi))+cos(theta(p))*cos(theta(p_i_pl_j_mi)) )
+        Hp = Hp-J_H*( sin(theta(p))*sin(theta(p_i_mi_j_pl))*cos(fai(p)-fai(p_i_mi_j_pl))+cos(theta(p))*cos(theta(p_i_mi_j_pl)) )
+
+        Hp = Hp+lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_pl))-cos(theta(p))*sin(theta(p_i_pl))*sin(fai(p_i_pl)) )
+        Hp = Hp-lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_mi))-cos(theta(p))*sin(theta(p_i_mi))*sin(fai(p_i_mi)) )
+        Hp = Hp+(sqrt(3.0)/2)*lambda*( cos(theta(p))*sin(theta(p_j_pl))*cos(fai(p_j_pl))&
+            -sin(theta(p))*cos(fai(p))*cos(theta(p_j_pl)) )&
+            +(1.0/2)*lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_j_pl))-cos(theta(p))*sin(theta(p_j_pl))*sin(fai(p_j_pl)) )
+        Hp = Hp-(sqrt(3.0)/2)*lambda*( cos(theta(p))*sin(theta(p_j_mi))*cos(fai(p_j_mi))&
+            -sin(theta(p))*cos(fai(p))*cos(theta(p_j_mi)) )&
+            -(1.0/2)*lambda*( sin(theta(p))*sin(fai(p))*cos(theta(p_j_mi))-cos(theta(p))*sin(theta(p_j_mi))*sin(fai(p_j_mi)) )
+        Hp = Hp+lambda*(1.0/2)*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_pl_j_mi))&
+            -cos(theta(p))*sin(theta(p_i_pl_j_mi))*sin(fai(p_i_pl_j_mi)) )&
+            -lambda*(sqrt(3.0)/2)*( cos(theta(p))*sin(theta(p_i_pl_j_mi))*cos(fai(p_i_pl_j_mi))&
+            -sin(theta(p))*cos(fai(p))*cos(theta(p_i_pl_j_mi)) )
+        Hp = Hp-lambda*(1.0/2)*( sin(theta(p))*sin(fai(p))*cos(theta(p_i_mi_j_pl))&
+            -cos(theta(p))*sin(theta(p_i_mi_j_pl))*sin(fai(p_i_mi_j_pl)) )&
+            +lambda*(sqrt(3.0)/2)*( cos(theta(p))*sin(theta(p_i_mi_j_pl))*cos(fai(p_i_mi_j_pl))&
+            -sin(theta(p))*cos(fai(p))*cos(theta(p_i_mi_j_pl)) )
+        !write(*,*) Hp
+
+    end subroutine calcu_Hp
+
+    subroutine calcu_V( L, J_H, lambda, fai, theta, H, V )
+        implicit none
+        integer :: p, L, i, j
+        real*8 :: J_H, lambda, fai(L*L), theta(L*L), H(L*L), V
+        V = 0.0
+
+        do i = 1,L
+            do j = 1,L
+                p = (i-1)*L+j
+                call calcu_Hp( p, L, J_H, lambda, fai, theta, H(p))
+                V = V+H(p)
             end do
-        end do
-
+        end do!
+        V = V/2
+        !write(*,*) V
 
     end subroutine calcu_V
 
@@ -94,7 +99,7 @@ contains
 
     end subroutine calcu_deltaV
     
-end module dou_ex
+end module modu
 
 real(8) function ran()
 !----------------------------------------------!
@@ -157,38 +162,38 @@ end function
 
 
 program skyrmionlattice
-    use dou_ex 
+    use  modu
     implicit none
     !#########################################
     !L, size of lattice
     !N = L*L, num of lattice
     !t, J_k, the parameter if H
     !##########################################
-    integer, parameter :: L = 40, N = L*L, num_MC = 10**6, num_T_para = 15
+    integer, parameter :: L = 40, N = L*L, num_MC = 4*10**5, num_T_para = 20
     real*8, parameter :: t = 1.0, PI = 3.141592654
-    integer :: i, j, k, ii, p, d, di, dd, ij, aver_num
-    real*8 :: ran, J_k, beta, miu, Tc, x, energyV, energyD
-    real*8 :: V, deltaV, J_H, lambda, B_z, pa, V_new, deltaV_new
+    integer :: i, j, k, ii, r, d, di, dd, ij, aver_num
+    real*8 :: ran, beta, Tc, x, Hp, B_z
+    real*8 :: V, deltaV, J_H, lambda, pa, V_new
+    integer, dimension(1) :: mloc
     real*8, dimension(2,N) :: fai, theta
     real*8, dimension(num_T_para) :: T_para
-    open( unit = 12, file = 'B_z.in' )
-    read(12,*) pa
-    !pa = 55.0/89
+    real*8, dimension(N) :: H
+    character(len=2) :: cha
     d = 1
-    lambda = 0.3*PI
-    J_H = lambda/11.7810
-    B_z = pa*t
-    deltaV = 0
-    V = 0
-    deltaV_new = 0
-    V_new = 0
-    energyV = 0
-    energyD = 0
+    lambda = 0.4*PI*t
+    J_H = t
     aver_num = 100
+    open(unit = 12, file = 'B_z.in')
+    read(12,*) pa
+    B_z = pa*t
+    T_para = (/ 1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1, 0.05/)
+    open(unit = 10, file = 'T.out')
+    do i = 1, num_T_para
+        write(10,*) T_para(i)
+    end do
+    close(10)
 
-    T_para = (/1.0, 0.5, 0.1, 0.08, 0.05, 0.002, 0.01, 0.008, 0.005 ,0.001, 0.0009, 0.008, 0.0007, 0.0006, 0.0005/)
     call initran(1)
-    open( unit = 13, file = 'lattice.out' )
 
     do i = 1, N
         x = ran()
@@ -197,81 +202,72 @@ program skyrmionlattice
         theta(d,i) = x*PI
     end do
     !ij = 0
-do ii = 1, num_T_para 
+do ii = 1, num_T_para
+    write(cha,'(i2)') ii
+    open(unit = 13, file = 'energy'//adjustl(trim(cha))//'.out' )
+    open( unit = 14, file = 'lattice'//adjustl(trim(cha))//'.out' )
+    write(*,*) num_T_para-ii
     Tc = T_para(ii)*J_H
     beta = 1/Tc
-    p = 0
-    call calcu_V( L, N, J_H, lambda, fai(d,:), theta(d,:), V )
-    call calcu_deltaV(L, N, B_z, theta(d,:), deltaV)
-    !ln_Weight = -beta*(V+deltaV)
+    !r= 0
+    call calcu_V( L, J_H, lambda, fai(d,:), theta(d,:), H, V )
 
     do i = 1, num_MC 
+
         dd = di(d)
-        !x = ran()
-        !p = int(x*N)+1 
-        p = p+1
-        !Write(*,*) p
+        x = ran()
+        r = int(x*N)+1 
+        !r = r+1
+        !Write(*,*) r
         fai(dd,:) = fai(d,:)
         theta(dd,:) = theta(d,:)
         x = ran()
-        fai(dd, p) = fai(d,p)+(x-0.5)*2*2*PI/12
-        if ( fai(dd,p) < 0 ) then
-            fai(dd,p) = fai(dd,p)+2*PI
+        fai(dd, r) = fai(d,r)+(x-0.5)*2*2*PI/12
+        if ( fai(dd,r) < 0 ) then
+            fai(dd,r) = fai(dd,r)+2*PI
         end if
-        if ( fai(dd,p) > 2*PI ) then
-            fai(dd,p) = fai(dd,p)-2*PI
+        if ( fai(dd,r) > 2*PI ) then
+            fai(dd,r) = fai(dd,r)-2*PI
         end if
 
         x = ran()
-        theta(dd, p) = theta(d,p)+(x-0.5)*2*PI/6
-        if ( theta(dd,p) < 0 ) then
-            theta(dd,p) = theta(dd,p)+PI
+        theta(dd, r) = theta(d,r)+(x-0.5)*2*PI/6
+        if ( theta(dd,r) < 0 ) then
+            theta(dd,r) = theta(dd,r)+PI
         end if
-        if (theta(dd,p) > PI ) then
-            theta(dd,p) = theta(dd,p)-PI
+        if (theta(dd,r) > PI ) then
+            theta(dd,r) = theta(dd,r)-PI
         end if
-        call calcu_V( L, N, J_H, lambda, fai(dd,:), theta(dd,:), V_new )
-        call calcu_deltaV(L, N, B_z, theta(dd,:), deltaV_new)
-        !ln_Weight_new = -beta*(V+deltaV)
+
+        call calcu_Hp( r, L, J_H, lambda, fai(dd,:), theta(dd,:), Hp)
+        deltaV = B_z*( cos(theta(dd,r))-cos(theta(d,r)) )
 
         x = ran()
-        !write(*,*) x, '<?', exp( ln_Weight_new-ln_Weight )
-        !write(*,*) ln_Weight, ln_Weight_new
-        !write(*,*) x, '<?', exp( -beta*(V_new+deltaV_new)+beta*(V+deltaV) )
-        !write(*,*) -beta*(V+deltaV), -beta*(V_new+deltaV_new)
-        if ( x > exp( -beta*(V_new+deltaV_new)+beta*(V+deltaV) ) ) then
-            fai(dd,p) = fai(d,p)
-            theta(dd, p) = theta(d, p)
+        !write(*,*) x, '<?', exp( -beta*(Hp-H(r)+deltav) )
+        if ( x > exp( -beta*(Hp-H(r)+deltaV) ) ) then
+            fai(dd,r) = fai(d,r)
+            theta(dd, r) = theta(d, r)
         else
-            V = V_new
-            deltaV = deltaV_new
-            !ln_Weight = ln_Weight_new
+            V = V+Hp-H(r)
+            H(r) = Hp
         end if
         d = dd
-        !write(*,*) i/(num_MC/100)
-        if (ii == num_T_para .AND. i > num_MC-aver_num*N ) then
+        !if (ii == num_T_para .AND. i > num_MC-aver_num*N ) then
+        if ( i > num_MC-aver_num*N ) then
             if ( mod(i+aver_num*N-num_MC, N) == 0 ) then
-                energyV = energyV+V
-                energyD = energyD+deltaV
-                !ij = ij+1
-                !write(13,*) ij
                 do j = 1, N
-                    write(13,*) j, theta(d,j), fai(d,j)
+                    write(14,*) theta(d,j), fai(d,j)
                 end do
             end if
         end if
-
-        if ( p == N ) then
-            p = 0
-        end if
-
+        !if ( r == N ) then
+        !    r = 0
+        !end if
+        write(13,*) V
     end do
+    close(13)
+    close(14)
 end do
-energyV = energyV/aver_num
-energyD = energyD/aver_num
-open(unit = 18, file = 'enenrgy.out')
-write(18,*) energyV, energyD
-
 
     write(*,*) 'end'
 end program skyrmionlattice
