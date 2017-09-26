@@ -190,7 +190,7 @@ program skyrmionlattice
     B_z = pa*t
     T_para = (/ 1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1, 0.08,&
         0.06, 0.04, 0.02, 0.008, 0.006, 0.004, 0.002, 0.0008, 0.0006, 0.0004/)
-    open(unit = 10, file = 'T_energyaver.out')
+    open(unit = 15, file = 'T_energyaver.out')
     call initran(1)
 
     do i = 1, N
@@ -269,8 +269,11 @@ do ii = 1, num_T_para
     end do
     close(13)
     close(14)
-    write(10,*) T_para(ii), energy_aver/aver_num, energy_aver_B/aver_num
+    energy_aver = energy_aver/aver_num
+    energy_aver_B = energy_aver_B/aver_num
+    write(15,*) T_para(ii), energy_aver, energy_aver_B
 end do
+    close(15)
 
     write(*,*) 'end'
 end program skyrmionlattice
