@@ -35,7 +35,7 @@ contains
 
     end subroutine calcu_p_nearest 
 
-    subroutine calcu_H( L, N, M, H, t )
+    subroutine calcu_H( L, N, M, H, t)
 
         implicit none
         integer :: L, N, M, i, j
@@ -56,14 +56,14 @@ contains
                 H(p, p_i_pl) = -t
                 H(p, p_i_mi) = -t
                 H(p, p_j_pl) = -t
-                H(p, p_i_mi) = -t
+                H(p, p_j_mi) = -t
                 H(p, p_i_pl_j_mi) = -t
-                H(p, p_i_mi_j_pl) = -t
+                H(p, p_i_mi_j_pl) = -t				
 
                 H(p+N, p_i_pl+N) = -t
                 H(p+N, p_i_mi+N) = -t
                 H(p+N, p_j_pl+N) = -t
-                H(p+N, p_i_mi+N) = -t
+                H(p+N, p_j_mi+N) = -t
                 H(p+N, p_i_pl_j_mi+N) = -t
                 H(p+N, p_i_mi_j_pl+N) = -t
             end do
@@ -83,24 +83,31 @@ program skyrmionlattice
     integer, parameter :: L = 60, N = L*L, M = 2*N, LDZ = 1
     real*8, parameter :: t = 1.0
     integer :: i, j, info
+	real*8 :: Emax, Emin, a, b
     real*8, dimension(M) :: Eig
     real*8, dimension(3*M-2) :: Rwork
     real*8, dimension(M,M) :: H
     real*8, dimension(3*M) :: Work
     real*8, dimension(M*(M+1)/2) :: AP
     real*8, dimension(LDZ,M) :: Z
-
-    call calcu_H( L, N, M, H, t )
+    Emax = 3.0*t
+    Emin = -6.0*t
+    a = (Emax-Emin)/2.0
+    b = (Emax+Emin)/2.0
+    call calcu_H( L, N, M, H, t)
+	
     do i = 1,M
+		H(i,i) = H(i,i)-b
         do j = i,M
+			H(i,j) = H(i,j)/a
             AP(i+(j-1)*j/2) = H(i,j)
         end do
     end do
     call dspev( 'N', 'U', M, AP, Eig, Z, LDZ, work, info )
     if (info /= 0) then
-    write(*,*) 'info_erro =', info
+    	write(*,*) 'info_erro =', info
     end if
-    Eig = Eig/t
+
     open(unit = 14, file = 'eig.out')
     do i = 1, M
         write(14,*) Eig(i)
